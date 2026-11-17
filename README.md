@@ -4,7 +4,7 @@
 
 免費線上鍵盤按鍵測試工具，單頁 HTML + CSS + JavaScript，不需安裝、不需後端。
 
-🔗 線上版本：<https://keyboard.ouoc.net/>
+🔗 線上版本：<https://ivantw829.github.io/keyboard-test/>
 
 ## 功能
 
