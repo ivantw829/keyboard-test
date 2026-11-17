@@ -1,7 +1,5 @@
 # 鍵盤按鍵診斷工具
 
-> 本專案已 Archive，保留供參考，程式碼不再更新。
-
 免費線上鍵盤按鍵測試工具，單頁 HTML + CSS + JavaScript，不需安裝、不需後端。
 
 🔗 線上版本：<https://ivantw829.github.io/keyboard-test/>
