@@ -2,21 +2,32 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<title>鍵盤按鍵診斷工具 - 免費線上按鍵測試</title>
-<meta name="description" content="免費線上鍵盤診斷工具，快速檢測鍵盤按鍵功能。支援計數、故障標記、深淺主題切換，幫助您測試和診斷鍵盤問題。">
-<meta name="keywords" content="鍵盤測試,按鍵診斷,鍵盤檢測,線上工具,免費檢測">
-<meta name="author" content="Keyboard Test Tool">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>鍵盤按鍵診斷工具 - 免費線上按鍵測試</title>
+<meta name="description" content="免費線上鍵盤診斷工具，快速檢測鍵盤按鍵功能。支援按鍵計數、連點偵測、故障標記、測試進度與深淺主題切換。">
+<meta name="keywords" content="鍵盤測試,按鍵診斷,鍵盤檢測,連點偵測,線上工具,免費檢測">
+<meta name="author" content="Keyboard Test Tool">
 <meta property="og:title" content="鍵盤按鍵診斷工具 - 免費線上按鍵測試">
-<meta property="og:description" content="免費線上鍵盤診斷工具，快速檢測鍵盤按鍵功能。支援計數、故障標記、深淺主題切換。">
+<meta property="og:description" content="免費線上鍵盤診斷工具，快速檢測鍵盤按鍵功能。支援計數、連點偵測、故障標記、深淺主題切換。">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://keyboard.ouoc.net/">
+<meta property="og:url" content="https://ivantw829.github.io/keyboard-test/">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="鍵盤按鍵診斷工具">
 <meta name="twitter:description" content="免費線上鍵盤診斷工具，快速檢測鍵盤按鍵功能。">
-<link rel="canonical" href="https://keyboard.ouoc.net/">
+<link rel="canonical" href="https://ivantw829.github.io/keyboard-test/">
 <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-<meta name="language" content="zh-TW">
+<meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1c1c1e" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='8' width='56' height='48' rx='12' fill='%230071e3'/%3E%3Crect x='12' y='14' width='40' height='28' rx='7' fill='%23fff' fill-opacity='.92'/%3E%3C/svg%3E">
+<script>
+  // 先套用已儲存的主題，避免載入時閃爍
+  (function () {
+    try {
+      var t = localStorage.getItem('theme');
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
 <style>
   :root {
     --bg: #f5f5f7;
@@ -24,40 +35,26 @@
     --muted: #6e6e73;
     --key-bg: #ffffff;
     --key-text: #000000;
-    --key-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    --key-shadow: 0 1px 3px rgba(16,24,40,0.10);
     --accent: #0071e3;
+    --accent-hover: #0060c8;
     --container-bg: #ffffff;
-    --container-shadow: 0 10px 30px rgba(0,0,0,0.08);
-    --btn-border: rgba(0,0,0,0.08);
-  }
-
-  /* 手動覆寫主題：設定 data-theme="light" 或 data-theme="dark" 在 <html> 上 */
-  html[data-theme="light"] {
-    --bg: #f5f5f7;
-    --text: #1d1d1f;
-    --muted: #6e6e73;
-    --container-bg: #ffffff;
-    /* 亮色模式的鍵盤容器陰影：更柔、更淺 */
     --container-shadow: 0 8px 24px rgba(16,24,40,0.06);
-    --btn-border: rgba(0,0,0,0.08);
-    --key-bg: #ffffff;
-    --key-text: #000000;
-    --key-shadow: 0 1px 3px rgba(16,24,40,0.06);
+    --btn-border: rgba(0,0,0,0.12);
+    --badge-idle-bg: #d1d1d6;
+    --badge-idle-text: #3a3a3c;
+    --badge-hit-bg: #248a3d;
+    --badge-hit-text: #ffffff;
+    --flag-manual: #ff3b30;
+    --flag-chatter: #ff9500;
+
+    /* 按鍵單位：依視窗寬度縮放，最大 56px */
+    --u: clamp(30px, calc((100vw - 48px) / 17.8), 56px);
+    --gap: calc(var(--u) * 0.14);
   }
 
-  html[data-theme="dark"] {
-    --bg: #1c1c1e;
-    --text: #f5f5f7;
-    --muted: #9b9b9f;
-    --container-bg: #000000;
-    --container-shadow: 0 20px 50px rgba(0,0,0,0.6);
-    --btn-border: rgba(255,255,255,0.08);
-    --key-bg: #2c2c2e;
-    --key-text: #f5f5f7;
-    --key-shadow: 0 1px 6px rgba(0,0,0,0.6);
-  }
   @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not([data-theme="light"]) {
       --bg: #1c1c1e;
       --text: #f5f5f7;
       --muted: #9b9b9f;
@@ -66,565 +63,625 @@
       --key-shadow: 0 1px 6px rgba(0,0,0,0.6);
       --container-bg: #000000;
       --container-shadow: 0 20px 50px rgba(0,0,0,0.6);
+      --btn-border: rgba(255,255,255,0.14);
+      --badge-idle-bg: #48484a;
+      --badge-idle-text: #e5e5ea;
+      --badge-hit-bg: #30d158;
+      --badge-hit-text: #000000;
     }
   }
+  :root[data-theme="dark"] {
+    --bg: #1c1c1e;
+    --text: #f5f5f7;
+    --muted: #9b9b9f;
+    --key-bg: #2c2c2e;
+    --key-text: #f5f5f7;
+    --key-shadow: 0 1px 6px rgba(0,0,0,0.6);
+    --container-bg: #000000;
+    --container-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    --btn-border: rgba(255,255,255,0.14);
+    --badge-idle-bg: #48484a;
+    --badge-idle-text: #e5e5ea;
+    --badge-hit-bg: #30d158;
+    --badge-hit-text: #000000;
+  }
+
+  * { box-sizing: border-box; }
 
   body {
     margin: 0;
-    padding: 40px 20px;
+    padding: 40px 16px;
     background: var(--bg);
     color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, "PingFang TC", "Microsoft JhengHei", sans-serif;
     min-height: 100vh;
   }
 
+  main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 100%;
+  }
+
   h1 {
-    font-size: 32px;
+    font-size: clamp(24px, 5vw, 32px);
     font-weight: 700;
-    margin: 0 0 8px 0;
+    margin: 0 0 8px;
+    text-align: center;
   }
   .desc {
-    font-size: 17px;
+    font-size: 16px;
+    line-height: 1.5;
     color: var(--muted);
-    margin-bottom: 32px;
+    margin: 0 0 24px;
+    text-align: center;
+    max-width: 640px;
   }
 
   .toolbar {
     display: flex;
     gap: 12px;
     align-items: center;
-    margin-bottom: 20px;
+    justify-content: center;
+    margin-bottom: 12px;
     flex-wrap: wrap;
   }
 
-  #resetBtn {
-    background: var(--accent);
-    color: white;
-    border: none;
+  .btn {
     border-radius: 12px;
-    padding: 10px 24px;
-    font-size: 17px;
+    padding: 10px 20px;
+    font: inherit;
+    font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,113,227,0.3);
-    transition: all 0.2s ease;
-    margin: 0;
+    transition: background-color 0.2s ease, transform 0.1s ease;
   }
-  #resetBtn:hover { background: #0060c8; }
-  #resetBtn:active { transform: scale(0.98); }
+  .btn:active { transform: scale(0.98); }
 
-  /* 主題切換按鈕 */
+  #resetBtn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0,113,227,0.3);
+  }
+  #resetBtn:hover { background: var(--accent-hover); }
+
   #themeToggleBtn {
     background: transparent;
     color: var(--text);
     border: 1px solid var(--btn-border);
-    border-radius: 12px;
-    padding: 10px 24px;
-    font-size: 17px;
-    font-weight: 600;
-    cursor: pointer;
   }
-  #themeToggleBtn:active { transform: translateY(1px); }
 
-  /* 佈局下拉 */
+  .layout-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+  }
   #layoutSelect {
     border: 1px solid var(--btn-border);
     border-radius: 10px;
-    padding: 10px 12px;
+    padding: 9px 12px;
+    font: inherit;
     font-size: 16px;
     background: var(--container-bg);
     color: var(--text);
   }
 
+  .progress {
+    margin: 0 0 20px;
+    font-size: 15px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+  .progress strong { color: var(--text); }
+
   .keyboard-container {
     background: var(--container-bg);
-    padding: 20px 18px 28px;
-    border-radius: 24px;
+    padding: calc(var(--u) * 0.36);
+    border-radius: calc(var(--u) * 0.43);
     box-shadow: var(--container-shadow);
+    max-width: 100%;
+    overflow-x: auto;
   }
+  #keyboard { width: max-content; }
 
   .row {
     display: flex;
-    gap: 8px;
-    justify-content: center;
-    margin-bottom: 8px;
+    gap: var(--gap);
+    margin-bottom: var(--gap);
   }
+  .row:last-child { margin-bottom: 0; }
 
+  /* --w 為按鍵寬度（單位數），寬鍵會把中間省略的間距補回來，讓每列對齊 */
   .key {
+    --w: 1;
     position: relative;
+    flex: none;
+    width: calc(var(--u) * var(--w) + var(--gap) * (var(--w) - 1));
+    height: var(--u);
     background: var(--key-bg);
     color: var(--key-text);
-    border-radius: 12px;
+    border-radius: calc(var(--u) * 0.21);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 15px;
+    font-size: clamp(9px, calc(var(--u) * 0.26), 15px);
     font-weight: 500;
     box-shadow: var(--key-shadow);
-    transition: all 0.15s ease;
+    transition: transform 0.08s ease, background-color 0.08s ease, color 0.08s ease;
     user-select: none;
+    -webkit-user-select: none;
     cursor: pointer;
+    white-space: nowrap;
+  }
+  .key.pressed {
+    transform: translateY(2px);
+    background: var(--accent);
+    color: #fff;
+  }
+  .key.na {
+    opacity: 0.4;
+    cursor: help;
   }
 
-  /* 按下動畫 */
-  .key:active, .key.pressed {
-    transform: translateY(2px);
+  /* 方向鍵上下兩個半高鍵 */
+  .key-stack {
+    flex: none;
+    width: var(--u);
+    height: var(--u);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .key.half {
+    width: 100%;
+    height: calc((var(--u) - 2px) / 2);
+    font-size: clamp(8px, calc(var(--u) * 0.2), 12px);
   }
 
   /* 計數徽章（右上角） */
   .badge {
     position: absolute;
-    top: -10px;
-    right: -10px;
-    min-width: 28px;
-    height: 28px;
-    border-radius: 14px;
-    background: #34c759;
-    color: white;
-    font-size: 14px;
+    top: calc(var(--u) * -0.15);
+    right: calc(var(--u) * -0.15);
+    min-width: calc(var(--u) * 0.42);
+    height: calc(var(--u) * 0.42);
+    padding: 0 4px;
+    border-radius: 999px;
+    background: var(--badge-idle-bg);
+    color: var(--badge-idle-text);
+    font-size: clamp(9px, calc(var(--u) * 0.22), 13px);
     font-weight: 600;
+    font-variant-numeric: tabular-nums;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+    pointer-events: none;
+    z-index: 1;
   }
-  .badge.green { background: #34c759; color: white; }
-  .badge.yellow { background: #ffcc00; color: black; }
-  .badge.red    { background: #ff3b30; animation: pulse 2s infinite; }
+  .badge.hit {
+    background: var(--badge-hit-bg);
+    color: var(--badge-hit-text);
+  }
+  .key.half .badge {
+    min-width: calc(var(--u) * 0.34);
+    height: calc(var(--u) * 0.34);
+    top: calc(var(--u) * -0.12);
+    right: calc(var(--u) * -0.12);
+  }
+  .key.half .warning {
+    top: 50%;
+    width: calc(var(--u) * 0.3);
+    height: calc(var(--u) * 0.3);
+    margin-top: calc(var(--u) * -0.15);
+  }
+  .key.half.lower .badge {
+    top: auto;
+    bottom: calc(var(--u) * -0.12);
+  }
 
-  /* 紅色驚嘆號（左上角） */
+  /* 故障標記（左上角） */
+  /* 放在按鍵內側，避免和左邊按鍵的計數徽章重疊 */
   .warning {
     position: absolute;
-    top: -8px;
-    left: -8px;
-    width: 32px;
-    height: 32px;
-    background: #ff3b30;
-    color: white;
+    top: calc(var(--u) * 0.06);
+    left: calc(var(--u) * 0.06);
+    width: calc(var(--u) * 0.34);
+    height: calc(var(--u) * 0.34);
+    color: #fff;
     border-radius: 50%;
-    font-size: 20px;
-    font-weight: bold;
+    font-size: clamp(9px, calc(var(--u) * 0.24), 14px);
+    font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 12px rgba(255,59,48,0.5);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.3);
     animation: pop 0.3s ease;
+    pointer-events: none;
+    z-index: 2;
   }
+  .warning.manual  { background: var(--flag-manual); }
+  .warning.chatter { background: var(--flag-chatter); }
 
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-  }
   @keyframes pop {
     0% { transform: scale(0); }
     80% { transform: scale(1.2); }
     100% { transform: scale(1); }
   }
 
-  /* 按鍵尺寸 */
-  .key { height: 56px; width: 56px; }
-  .w15  { width: calc(56px * 1.5); }
-  .w175 { width: calc(56px * 1.75); }
-  .w225 { width: calc(56px * 2.25); }
-  .w625 { width: calc(56px * 6.25); }
-  .w7   { width: calc(56px * 7); }
-  .return { border-radius: 0 12px 12px 0; }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 20px;
+    margin: 20px 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .legend li { display: flex; align-items: center; gap: 6px; }
+  .dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .dot.idle    { background: var(--badge-idle-bg); }
+  .dot.hit     { background: var(--badge-hit-bg); }
+  .dot.chatter { background: var(--flag-chatter); }
+  .dot.manual  { background: var(--flag-manual); }
+
+  @media (max-width: 480px) {
+    body { padding: 24px 12px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .key, .btn, .warning { transition: none; animation: none; }
+  }
 </style>
 </head>
 <body>
 
 <main>
-<h1>鍵盤按鍵診斷工具</h1>
-<p class="desc">點擊按鍵標記問題（紅色驚嘆號），或用實體鍵盤測試次數</p>
-<div class="toolbar">
-  <button id="resetBtn" aria-label="重設所有按鍵計數與標記">重設所有計數與標記</button>
-  <button id="themeToggleBtn" aria-pressed="false" aria-label="切換深淺主題">主題：系統</button>
-  <label for="layoutSelect" style="display:flex;align-items:center;gap:8px;font-weight:600;color:var(--text);">
-    佈局
-    <select id="layoutSelect" aria-label="選擇鍵盤佈局">
-      <option value="mac">Mac (ANSI)</option>
-      <option value="win">Windows (ANSI)</option>
-    </select>
-  </label>
-</div>
+  <h1>鍵盤按鍵診斷工具</h1>
+  <p class="desc">按下實體鍵盤上的每個按鍵即可計數；同一顆鍵在極短時間內重複觸發（連點）會自動標示。點擊畫面上的按鍵可手動標記故障。Mac 的 F1–F12 可能需要同時按住 fn。</p>
 
-<section class="keyboard-container" aria-label="鍵盤按鍵診斷區域">
-  <div id="keyboard"></div>
-</section>
+  <div class="toolbar">
+    <button id="resetBtn" class="btn" type="button">重設所有計數與標記</button>
+    <button id="themeToggleBtn" class="btn" type="button" aria-label="切換主題（系統 → 深色 → 亮色）">主題：系統</button>
+    <label class="layout-label" for="layoutSelect">
+      佈局
+      <select id="layoutSelect">
+        <option value="mac">Mac (ANSI)</option>
+        <option value="win">Windows (ANSI)</option>
+      </select>
+    </label>
+  </div>
 
+  <p class="progress" id="progress"></p>
+
+  <section class="keyboard-container" aria-label="鍵盤按鍵診斷區域">
+    <div id="keyboard"></div>
+  </section>
+
+  <ul class="legend">
+    <li><span class="dot idle"></span>未測試</li>
+    <li><span class="dot hit"></span>已測試（數字為次數）</li>
+    <li><span class="dot chatter">!</span>疑似連點</li>
+    <li><span class="dot manual">!</span>手動標記故障</li>
+  </ul>
 </main>
 
 <script>
-const layouts = {
-  mac: {
-    name: 'Mac (ANSI)',
-    rows: [
-      [
-        { label: 'esc', key: 'Escape' },
-        { label: 'F1', key: 'F1' },
-        { label: 'F2', key: 'F2' },
-        { label: 'F3', key: 'F3' },
-        { label: 'F4', key: 'F4' },
-        { label: 'F5', key: 'F5' },
-        { label: 'F6', key: 'F6' },
-        { label: 'F7', key: 'F7' },
-        { label: 'F8', key: 'F8' },
-        { label: 'F9', key: 'F9' },
-        { label: 'F10', key: 'F10' },
-        { label: 'F11', key: 'F11' },
-        { label: 'F12', key: 'F12' },
-      ],
-      [
-        { label: '`', key: '`' },
-        { label: '1', key: '1' },
-        { label: '2', key: '2' },
-        { label: '3', key: '3' },
-        { label: '4', key: '4' },
-        { label: '5', key: '5' },
-        { label: '6', key: '6' },
-        { label: '7', key: '7' },
-        { label: '8', key: '8' },
-        { label: '9', key: '9' },
-        { label: '0', key: '0' },
-        { label: '−', key: '-' },
-        { label: '=', key: '=' },
-        { label: 'delete', key: 'Backspace', width: 'w175' },
-      ],
-      [
-        { label: 'Tab', key: 'Tab', width: 'w15' },
-        { label: 'Q', key: 'q' },
-        { label: 'W', key: 'w' },
-        { label: 'E', key: 'e' },
-        { label: 'R', key: 'r' },
-        { label: 'T', key: 't' },
-        { label: 'Y', key: 'y' },
-        { label: 'U', key: 'u' },
-        { label: 'I', key: 'i' },
-        { label: 'O', key: 'o' },
-        { label: 'P', key: 'p' },
-        { label: '[', key: '[' },
-        { label: ']', key: ']' },
-        { label: '\\', key: '\\', width: 'w15' },
-      ],
-      [
-        { label: 'Caps Lock', key: 'CapsLock', width: 'w175' },
-        { label: 'A', key: 'a' },
-        { label: 'S', key: 's' },
-        { label: 'D', key: 'd' },
-        { label: 'F', key: 'f' },
-        { label: 'G', key: 'g' },
-        { label: 'H', key: 'h' },
-        { label: 'J', key: 'j' },
-        { label: 'K', key: 'k' },
-        { label: 'L', key: 'l' },
-        { label: ';', key: ';' },
-        { label: "'", key: "'" },
-        { label: 'return', key: 'Enter', width: 'w225', extraClass: 'return' },
-      ],
-      [
-        { label: 'Shift', key: 'Shift', width: 'w225' },
-        { label: 'Z', key: 'z' },
-        { label: 'X', key: 'x' },
-        { label: 'C', key: 'c' },
-        { label: 'V', key: 'v' },
-        { label: 'B', key: 'b' },
-        { label: 'N', key: 'n' },
-        { label: 'M', key: 'm' },
-        { label: ',', key: ',' },
-        { label: '.', key: '.' },
-        { label: '/', key: '/' },
-        { label: 'Shift', key: 'ShiftR', width: 'w225' },
-      ],
-      [
-        { label: 'fn', key: 'fn', width: 'w15' },
-        { label: 'control', key: 'Control', width: 'w15' },
-        { label: 'option', key: 'Alt', width: 'w15' },
-        { label: 'command', key: 'Meta', width: 'w15' },
-        { label: 'Space', key: ' ', width: 'w7' },
-        { label: 'command', key: 'MetaR', width: 'w15' },
-        { label: 'option', key: 'AltR', width: 'w15' },
-        { label: 'Left', key: 'ArrowLeft' },
-        { stack: [
-            { label: 'Up', key: 'ArrowUp' },
-            { label: 'Down', key: 'ArrowDown' },
-          ]
-        },
-        { label: 'Right', key: 'ArrowRight' },
-      ],
-    ],
-  },
-  win: {
-    name: 'Windows (ANSI)',
-    rows: [
-      [
-        { label: 'esc', key: 'Escape' },
-        { label: 'F1', key: 'F1' },
-        { label: 'F2', key: 'F2' },
-        { label: 'F3', key: 'F3' },
-        { label: 'F4', key: 'F4' },
-        { label: 'F5', key: 'F5' },
-        { label: 'F6', key: 'F6' },
-        { label: 'F7', key: 'F7' },
-        { label: 'F8', key: 'F8' },
-        { label: 'F9', key: 'F9' },
-        { label: 'F10', key: 'F10' },
-        { label: 'F11', key: 'F11' },
-        { label: 'F12', key: 'F12' },
-      ],
-      [
-        { label: '`', key: '`' },
-        { label: '1', key: '1' },
-        { label: '2', key: '2' },
-        { label: '3', key: '3' },
-        { label: '4', key: '4' },
-        { label: '5', key: '5' },
-        { label: '6', key: '6' },
-        { label: '7', key: '7' },
-        { label: '8', key: '8' },
-        { label: '9', key: '9' },
-        { label: '0', key: '0' },
-        { label: '-', key: '-' },
-        { label: '=', key: '=' },
-        { label: 'Backspace', key: 'Backspace', width: 'w175' },
-      ],
-      [
-        { label: 'Tab', key: 'Tab', width: 'w15' },
-        { label: 'Q', key: 'q' },
-        { label: 'W', key: 'w' },
-        { label: 'E', key: 'e' },
-        { label: 'R', key: 'r' },
-        { label: 'T', key: 't' },
-        { label: 'Y', key: 'y' },
-        { label: 'U', key: 'u' },
-        { label: 'I', key: 'i' },
-        { label: 'O', key: 'o' },
-        { label: 'P', key: 'p' },
-        { label: '[', key: '[' },
-        { label: ']', key: ']' },
-        { label: '\\', key: '\\', width: 'w15' },
-      ],
-      [
-        { label: 'Caps Lock', key: 'CapsLock', width: 'w175' },
-        { label: 'A', key: 'a' },
-        { label: 'S', key: 's' },
-        { label: 'D', key: 'd' },
-        { label: 'F', key: 'f' },
-        { label: 'G', key: 'g' },
-        { label: 'H', key: 'h' },
-        { label: 'J', key: 'j' },
-        { label: 'K', key: 'k' },
-        { label: 'L', key: 'l' },
-        { label: ';', key: ';' },
-        { label: "'", key: "'" },
-        { label: 'Enter', key: 'Enter', width: 'w225', extraClass: 'return' },
-      ],
-      [
-        { label: 'Shift', key: 'Shift', width: 'w225' },
-        { label: 'Z', key: 'z' },
-        { label: 'X', key: 'x' },
-        { label: 'C', key: 'c' },
-        { label: 'V', key: 'v' },
-        { label: 'B', key: 'b' },
-        { label: 'N', key: 'n' },
-        { label: 'M', key: 'm' },
-        { label: ',', key: ',' },
-        { label: '.', key: '.' },
-        { label: '/', key: '/' },
-        { label: 'Shift', key: 'ShiftR', width: 'w225' },
-      ],
-      [
-        { label: 'Ctrl', key: 'Control', width: 'w15' },
-        { label: 'Win', key: 'Meta', width: 'w15' },
-        { label: 'Alt', key: 'Alt', width: 'w15' },
-        { label: 'Space', key: ' ', width: 'w7' },
-        { label: 'AltGr', key: 'AltR', width: 'w15' },
-        { label: 'Menu', key: 'ContextMenu', width: 'w15' },
-        { label: 'Ctrl', key: 'ControlR', width: 'w15' },
-        { label: 'Left', key: 'ArrowLeft' },
-        { stack: [
-            { label: 'Up', key: 'ArrowUp' },
-            { label: 'Down', key: 'ArrowDown' },
-          ]
-        },
-        { label: 'Right', key: 'ArrowRight' },
-      ],
-    ],
-  }
-};
+// 同一顆鍵兩次按下的間隔小於此值（毫秒）視為連點
+const CHATTER_MS = 80;
 
-const counter = {};
-const warned = new Set(); // 儲存有問題的按鍵
+// ---------- 版型資料 ----------
+// 每顆鍵：{ code: KeyboardEvent.code, label, w: 寬度單位 }；na = 瀏覽器無法偵測
+const k = (code, label, w) => ({ code, label, w });
+const letters = s => [...s].map(c => k('Key' + c, c));
+
+function buildLayout(name) {
+  const mac = name === 'mac';
+  const fKeys = Array.from({ length: 12 }, (_, i) => k('F' + (i + 1), 'F' + (i + 1), 1.125));
+  const arrows = [
+    k('ArrowLeft', '←'),
+    { stack: [k('ArrowUp', '↑'), k('ArrowDown', '↓')] },
+    k('ArrowRight', '→'),
+  ];
+  const bottom = mac
+    ? [
+        { label: 'fn', w: 1, na: true },
+        k('ControlLeft', 'control'),
+        k('AltLeft', 'option'),
+        k('MetaLeft', 'command', 1.25),
+        k('Space', '', 5.5),
+        k('MetaRight', 'command', 1.25),
+        k('AltRight', 'option'),
+        ...arrows,
+      ]
+    : [
+        k('ControlLeft', 'Ctrl', 1.25),
+        k('MetaLeft', 'Win', 1.25),
+        k('AltLeft', 'Alt', 1.25),
+        k('Space', '', 5.25),
+        k('AltRight', 'Alt'),
+        k('ContextMenu', 'Menu'),
+        k('ControlRight', 'Ctrl'),
+        ...arrows,
+      ];
+
+  return [
+    [k('Escape', mac ? 'esc' : 'Esc', 1.5), ...fKeys],
+    [
+      k('Backquote', '`'),
+      ...'1234567890'.split('').map(d => k('Digit' + d, d)),
+      k('Minus', '-'),
+      k('Equal', '='),
+      k('Backspace', mac ? 'delete' : 'Backspace', 2),
+    ],
+    [
+      k('Tab', mac ? 'tab' : 'Tab', 1.5),
+      ...letters('QWERTYUIOP'),
+      k('BracketLeft', '['),
+      k('BracketRight', ']'),
+      k('Backslash', '\\', 1.5),
+    ],
+    [
+      k('CapsLock', mac ? 'caps lock' : 'Caps Lock', 1.75),
+      ...letters('ASDFGHJKL'),
+      k('Semicolon', ';'),
+      k('Quote', "'"),
+      k('Enter', mac ? 'return' : 'Enter', 2.25),
+    ],
+    [
+      k('ShiftLeft', mac ? 'shift' : 'Shift', 2.25),
+      ...letters('ZXCVBNM'),
+      k('Comma', ','),
+      k('Period', '.'),
+      k('Slash', '/'),
+      k('ShiftRight', mac ? 'shift' : 'Shift', 2.75),
+    ],
+    bottom,
+  ];
+}
+
+// ---------- 狀態 ----------
+const keyEls = new Map();   // code → 按鍵元素
+const counts = new Map();   // code → 次數
+const lastDown = new Map(); // code → 上次按下時間
+const down = new Map();     // code → 按下時的 CapsLock 狀態（目前按住中的鍵）
+const manual = new Set();   // 手動標記
+const chatter = new Map();  // code → 連點間隔 ms
+
 const keyboardEl = document.getElementById('keyboard');
 const layoutSelect = document.getElementById('layoutSelect');
+const progressEl = document.getElementById('progress');
+const MODIFIERS = /^(Shift|Control|Alt|Meta)(Left|Right)$|^CapsLock$/;
 
-function createKeyElement(keyDef) {
+const store = {
+  get(key) { try { return localStorage.getItem(key); } catch (e) { return null; } },
+  set(key, v) { try { localStorage.setItem(key, v); } catch (e) {} },
+  remove(key) { try { localStorage.removeItem(key); } catch (e) {} },
+};
+
+// ---------- 渲染 ----------
+function makeKey(def, extraClass) {
   const el = document.createElement('div');
-  el.className = ['key', keyDef.width, keyDef.extraClass].filter(Boolean).join(' ');
-  el.dataset.key = keyDef.key;
-  el.textContent = keyDef.label;
+  el.className = extraClass ? 'key ' + extraClass : 'key';
+  if (def.w && def.w !== 1) el.style.setProperty('--w', def.w);
+  el.textContent = def.label;
+
+  if (def.na) {
+    el.classList.add('na');
+    el.title = '瀏覽器無法偵測此鍵';
+    return el;
+  }
+
+  el.dataset.code = def.code;
+  if (!def.label) el.setAttribute('aria-label', def.code);
+  const badge = document.createElement('span');
+  badge.className = 'badge';
+  badge.textContent = '0';
+  el.appendChild(badge);
+  el.addEventListener('click', () => toggleFlag(def.code));
+  keyEls.set(def.code, el);
   return el;
 }
 
-function renderKeyboard(layoutName) {
-  const layout = layouts[layoutName] || layouts.mac;
-  keyboardEl.innerHTML = '';
-  layout.rows.forEach(row => {
+function renderKeyboard(name) {
+  keyEls.clear();
+  keyboardEl.replaceChildren();
+  for (const row of buildLayout(name)) {
     const rowEl = document.createElement('div');
     rowEl.className = 'row';
-    row.forEach(keyDef => {
-      if (keyDef.stack) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'key';
-        wrapper.style.display = 'flex';
-        wrapper.style.flexDirection = 'column';
-        wrapper.style.gap = '2px';
-        keyDef.stack.forEach(stackKey => {
-          const child = createKeyElement(stackKey);
-          wrapper.appendChild(child);
-        });
-        rowEl.appendChild(wrapper);
+    for (const def of row) {
+      if (def.stack) {
+        const stack = document.createElement('div');
+        stack.className = 'key-stack';
+        def.stack.forEach((sub, i) => stack.appendChild(makeKey(sub, i ? 'half lower' : 'half')));
+        rowEl.appendChild(stack);
       } else {
-        const keyEl = createKeyElement(keyDef);
-        rowEl.appendChild(keyEl);
+        rowEl.appendChild(makeKey(def));
       }
-    });
+    }
     keyboardEl.appendChild(rowEl);
-  });
+  }
 }
 
-function initKeyInteractions() {
-  document.querySelectorAll('.key[data-key]').forEach(keyEl => {
-    const key = keyEl.dataset.key;
+function renderFlag(code) {
+  const el = keyEls.get(code);
+  if (!el) return;
+  el.querySelector('.warning')?.remove();
+  let cls = null, title = '';
+  if (manual.has(code)) { cls = 'manual'; title = '手動標記故障'; }
+  else if (chatter.has(code)) { cls = 'chatter'; title = `疑似連點：${chatter.get(code)} ms`; }
+  if (!cls) { el.removeAttribute('title'); return; }
+  const warn = document.createElement('span');
+  warn.className = 'warning ' + cls;
+  warn.textContent = '!';
+  el.title = title;
+  el.appendChild(warn);
+}
 
-    // 計數徽章
-    const badge = document.createElement('div');
-    badge.className = 'badge green';
-    badge.textContent = '0';
-    keyEl.appendChild(badge);
+function updateProgress() {
+  let tested = 0;
+  for (const code of keyEls.keys()) if (counts.get(code) > 0) tested++;
+  const faulty = new Set([...manual, ...chatter.keys()]).size;
+  progressEl.innerHTML =
+    `已測試 <strong>${tested}</strong> / ${keyEls.size} 鍵 · 疑似故障 <strong>${faulty}</strong> 鍵`;
+}
 
-    // 點擊切換警告標記
-    keyEl.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (warned.has(key)) {
-        warned.delete(key);
-        keyEl.querySelector('.warning')?.remove();
-      } else {
-        warned.add(key);
-        const warn = document.createElement('div');
-        warn.className = 'warning';
-        warn.textContent = '!';
-        keyEl.appendChild(warn);
-      }
-    });
-  });
+// ---------- 動作 ----------
+function bump(code) {
+  const n = (counts.get(code) || 0) + 1;
+  counts.set(code, n);
+  const badge = keyEls.get(code).querySelector('.badge');
+  badge.textContent = n;
+  badge.classList.add('hit');
+  updateProgress();
+}
+
+function toggleFlag(code) {
+  if (manual.has(code) || chatter.has(code)) {
+    manual.delete(code);
+    chatter.delete(code);
+  } else {
+    manual.add(code);
+  }
+  renderFlag(code);
+  updateProgress();
+}
+
+// 只清除畫面上的按下效果；down 記錄保留，避免之後補到的 keyup 被重複計數
+function clearPressed(onlyNonModifiers) {
+  for (const [code, el] of keyEls) {
+    if (onlyNonModifiers && MODIFIERS.test(code)) continue;
+    el.classList.remove('pressed');
+  }
 }
 
 function resetAll() {
-  Object.keys(counter).forEach(k => delete counter[k]);
-  warned.clear();
-  document.querySelectorAll('.badge').forEach(b => {
-    b.textContent = '0';
-    b.className = 'badge green';
-  });
-  document.querySelectorAll('.warning').forEach(w => w.remove());
+  counts.clear();
+  lastDown.clear();
+  down.clear();
+  manual.clear();
+  chatter.clear();
+  for (const el of keyEls.values()) {
+    const badge = el.querySelector('.badge');
+    badge.textContent = '0';
+    badge.classList.remove('hit');
+    el.classList.remove('pressed');
+    el.querySelector('.warning')?.remove();
+    el.removeAttribute('title');
+  }
+  updateProgress();
 }
 
-// 實體鍵盤輸入（只計數，不影響標記）
+// ---------- 實體鍵盤 ----------
 document.addEventListener('keydown', e => {
+  if (e.target instanceof HTMLSelectElement) return; // 讓佈局選單可用鍵盤操作
   e.preventDefault();
-  let key = e.key;
-  if (key === ' ') key = ' ';
-  if (e.key === 'Meta') key = e.location === 1 ? 'Meta' : 'MetaR';
-  if (e.key === 'Alt') key = e.location === 1 ? 'Alt' : 'AltR';
-  if (e.key === 'AltGraph') key = 'AltR';
-  if (e.key === 'Shift') key = e.location === 1 ? 'Shift' : 'ShiftR';
-  if (e.key === 'Control') key = e.location === 1 ? 'Control' : 'ControlR';
-  if (e.key === 'ContextMenu') key = 'ContextMenu';
+  if (e.repeat) return; // 長按自動重複不計
+  const code = e.code;
+  const el = keyEls.get(code);
+  if (!el) return;
 
-  const el = document.querySelector(`[data-key="${key}"]`);
-  if (el) {
-    counter[key] = (counter[key] || 0) + 1;
-    const badge = el.querySelector('.badge');
-    badge.textContent = counter[key];
-    badge.classList.remove('green','yellow','red');
-    if (counter[key] >= 6) badge.classList.add('red');
-    else if (counter[key] >= 3) badge.classList.add('yellow');
-    else badge.classList.add('green');
+  const now = e.timeStamp;
+  const prev = lastDown.get(code);
+  lastDown.set(code, now);
+  down.set(code, e.getModifierState('CapsLock'));
+  el.classList.add('pressed');
+  bump(code);
 
-    // 按下動畫
-    el.classList.add('pressed');
-    setTimeout(() => el.classList.remove('pressed'), 150);
+  if (prev !== undefined && now - prev < CHATTER_MS) {
+    chatter.set(code, Math.round(now - prev));
+    renderFlag(code);
+    updateProgress();
   }
 });
 
-// 佈局切換
-layoutSelect.addEventListener('change', () => {
-  const choice = layoutSelect.value;
-  localStorage.setItem('layout', choice);
-  renderKeyboard(choice);
-  initKeyInteractions();
-  resetAll();
+document.addEventListener('keyup', e => {
+  if (e.target instanceof HTMLSelectElement) return;
+  const code = e.code;
+  const el = keyEls.get(code);
+  if (!el) return;
+  e.preventDefault();
+  el.classList.remove('pressed');
+
+  // 只收到 keyup 的按鍵也要計數：
+  // 例如 macOS 的 Caps Lock 關閉時只送 keyup，或 Windows 的 PrintScreen
+  const capsAtDown = down.get(code);
+  const missedDown = !down.has(code) ||
+    (code === 'CapsLock' && capsAtDown !== e.getModifierState('CapsLock'));
+  down.delete(code);
+  if (missedDown) {
+    lastDown.set(code, e.timeStamp);
+    bump(code);
+  }
+
+  // Mac 按住 ⌘ 時其他鍵收不到 keyup，放開 ⌘ 時一併清除
+  if (code === 'MetaLeft' || code === 'MetaRight') clearPressed(true);
 });
 
-// 初始化佈局
-const savedLayout = localStorage.getItem('layout');
-const initialLayout = layouts[savedLayout] ? savedLayout : 'mac';
-layoutSelect.value = initialLayout;
-renderKeyboard(initialLayout);
-initKeyInteractions();
+window.addEventListener('blur', () => clearPressed(false));
+
+// ---------- 工具列 ----------
+document.getElementById('resetBtn').addEventListener('click', e => {
+  resetAll();
+  e.currentTarget.blur(); // 避免之後按 Space/Enter 觸發按鈕
+});
+
+function detectLayout() {
+  const p = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || '';
+  return /mac|iphone|ipad/i.test(p) ? 'mac' : 'win';
+}
+
+layoutSelect.addEventListener('change', () => {
+  store.set('layout', layoutSelect.value);
+  renderKeyboard(layoutSelect.value);
+  resetAll();
+  layoutSelect.blur();
+});
+
+const savedLayout = store.get('layout');
+layoutSelect.value = savedLayout === 'mac' || savedLayout === 'win' ? savedLayout : detectLayout();
+renderKeyboard(layoutSelect.value);
 resetAll();
 
-// 重設按鈕
-document.getElementById('resetBtn').addEventListener('click', () => {
-  resetAll();
-});
-
-// 主題切換與偏好儲存
-(function(){
+// 主題：系統 → 深色 → 亮色 → 系統
+(function () {
   const btn = document.getElementById('themeToggleBtn');
   const root = document.documentElement;
+  const labels = { system: '主題：系統', dark: '主題：深色', light: '主題：亮色' };
+  const next = { system: 'dark', dark: 'light', light: 'system' };
 
-  function effectiveTheme(){
-    const stored = localStorage.getItem('theme');
-    if(stored === 'light' || stored === 'dark') return stored;
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  }
-
-  function applyTheme(choice){
-    if(choice === 'system' || !choice){
+  function apply(choice) {
+    if (choice === 'system') {
       root.removeAttribute('data-theme');
-      btn.textContent = '主題：系統';
-      btn.setAttribute('aria-pressed','false');
+      store.remove('theme');
     } else {
       root.setAttribute('data-theme', choice);
-      btn.textContent = choice === 'dark' ? '主題：深色' : '主題：亮色';
-      btn.setAttribute('aria-pressed', 'true');
+      store.set('theme', choice);
     }
+    btn.textContent = labels[choice];
   }
 
-  // 初始化：若有儲存偏好則套用，否則維持系統（顯示目前狀態）
-  const stored = localStorage.getItem('theme');
-  if(stored === 'light' || stored === 'dark') applyTheme(stored);
-  else applyTheme('system');
-
-  // 點擊切換：如果目前是系統或亮色，切為深色；若是深色則切為亮色
-  btn.addEventListener('click', ()=>{
-    const current = root.getAttribute('data-theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    const next = current === 'dark' ? 'light' : 'dark';
-    applyTheme(next);
-    localStorage.setItem('theme', next);
-  });
-
-  // 若使用者想回到「系統」，按住 shift + 點擊
-  btn.addEventListener('click', (e)=>{
-    if(e.shiftKey){
-      localStorage.removeItem('theme');
-      applyTheme('system');
-    }
+  let current = root.getAttribute('data-theme') || 'system';
+  btn.textContent = labels[current];
+  btn.addEventListener('click', () => {
+    current = next[current];
+    apply(current);
+    btn.blur();
   });
 })();
 </script>
@@ -634,9 +691,10 @@ document.getElementById('resetBtn').addEventListener('click', () => {
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "鍵盤按鍵診斷工具",
-  "description": "免費線上鍵盤診斷工具，快速檢測鍵盤按鍵功能。支援計數、故障標記、深淺主題切換。",
-  "url": "https://keyboard.ouoc.net/",
-  "applicationCategory": "Utility",
+  "description": "免費線上鍵盤診斷工具，快速檢測鍵盤按鍵功能。支援計數、連點偵測、故障標記、深淺主題切換。",
+  "url": "https://ivantw829.github.io/keyboard-test/",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -659,15 +717,23 @@ document.getElementById('resetBtn').addEventListener('click', () => {
       "name": "如何使用鍵盤診斷工具？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "直接按下您的鍵盤按鍵，工具會自動計數並顯示次數。點擊螢幕上的按鍵可標記有問題的按鍵。"
+        "text": "直接按下鍵盤上的每個按鍵，工具會在對應按鍵上計數並顯示測試進度。點擊螢幕上的按鍵可手動標記有問題的按鍵。"
       }
     },
     {
       "@type": "Question",
-      "name": "計數器顯示什麼顏色的徽章？",
+      "name": "徽章顏色代表什麼？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "綠色表示正常（0-2次），黃色表示有些頻繁（3-5次），紅色表示可能有問題（6次或以上）。"
+        "text": "灰色表示尚未測試，綠色表示已測試且數字為按下次數。橘色驚嘆號表示疑似連點，紅色驚嘆號表示手動標記故障。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "什麼是連點偵測？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "按一次卻觸發兩次（chatter）是常見的鍵盤故障。同一顆鍵兩次按下的間隔小於 80 毫秒時，工具會自動以橘色驚嘆號標示。"
       }
     }
   ]
